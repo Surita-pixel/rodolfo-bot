@@ -1,5 +1,6 @@
 import decouple
 import spotipy
+import discord
 
 
 def search(query):
@@ -9,8 +10,12 @@ def search(query):
     sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
     results = sp.search(q=query, type='track', limit=1)
     if results['tracks']['items']:
-        print(results)
-        track_id = results['tracks']['items'][0]['id']
-        return f'https://open.spotify.com/track/{track_id}'
+        track = results['tracks']['items'][0]
+        embed = discord.Embed(title=track['name'], url=track['external_urls']['spotify'], color=0x1DB954)
+        embed.set_thumbnail(url=track['album']['images'][0]['url'])
+        embed.add_field(name='Artista', value=track['artists'][0]['name'], inline=False)
+        embed.add_field(name='Álbum', value=track['album']['name'], inline=False)
+        embed.set_footer(text='Spotify', icon_url='https://i.imgur.com/vBYxuV9.png')
+        return embed
     else:
         return None

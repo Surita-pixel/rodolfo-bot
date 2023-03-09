@@ -27,6 +27,8 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    if message.channel.name != 'rodolfo':
+        return 
     if message.author == client.user:
         return
     _99_frases_aleatorias = [
@@ -53,9 +55,9 @@ async def on_message(message):
              return msg.author == message.author and msg.channel == message.channel
         try:
             query = await client.wait_for('message', check=check, timeout=30.0)
-            song_link = search(query.content)
-            if song_link:
-                  await message.channel.send(song_link)
+            song_embed = search(query.content)
+            if song_embed:
+                await message.channel.send(embed=song_embed)
             else:
                 await message.channel.send('No se encontró ninguna canción con ese nombre.')
         except asyncio.TimeoutError:
